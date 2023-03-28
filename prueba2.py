@@ -1,6 +1,7 @@
 import os
 import subprocess
 import tkinter as tk
+from tkinter import filedialog
 
 class FileExplorer:
     def __init__(self, master):
@@ -13,13 +14,16 @@ class FileExplorer:
         self.listbox.pack()
         self.listbox.bind("<Double-Button-1>", self.on_folder_selected)
         
-        self.button = tk.Button(root, text = 'Download everything from current folder', command = self.showDirectory)
+        self.button = tk.Button(root, text = 'Download everything from current folder', command = self.downloadFolder)
         self.button.pack()
 
         self.refresh_listbox()
 
-    def showDirectory(self):
-        print(self.current_directory)
+    def downloadFolder(self):
+        directory = filedialog.askdirectory()
+        print(directory)
+        cmd = ["adb", "pull", "-a", self.current_directory + ".", directory]
+        subprocess.call(cmd)
 
     def refresh_listbox(self):
         # Clear the listbox
