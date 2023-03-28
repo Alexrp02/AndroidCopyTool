@@ -21,9 +21,13 @@ class FileExplorer:
 
     def downloadFolder(self):
         directory = filedialog.askdirectory()
-        print(directory)
-        cmd = ["adb", "pull", "-a", self.current_directory + ".", directory]
-        subprocess.call(cmd)
+        cmd = ["adb", "shell", "du", "-sh", self.current_directory, "|" , "awk", "'{print $1}'"]
+        size = subprocess.check_output(cmd).decode('utf-8').splitlines()[0]
+        print(size)
+        download = tk.messagebox.askyesno("Download folder", "Do you want to download the folder " + self.current_directory + " with size " + size + " to " + directory + "?")
+        if(download):
+            cmd = ["adb", "pull", "-a", self.current_directory + ".", directory]
+            subprocess.call(cmd)
 
     def refresh_listbox(self):
         # Clear the listbox
