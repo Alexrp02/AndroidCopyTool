@@ -13,7 +13,13 @@ class FileExplorer:
         self.listbox.pack()
         self.listbox.bind("<Double-Button-1>", self.on_folder_selected)
         
+        self.button = tk.Button(root, text = 'Download everything from current folder', command = self.showDirectory)
+        self.button.pack()
+
         self.refresh_listbox()
+
+    def showDirectory(self):
+        print(self.current_directory)
 
     def refresh_listbox(self):
         # Clear the listbox
@@ -47,7 +53,10 @@ class FileExplorer:
                 self.current_directory = subprocess.check_output(cmd).decode('utf-8').splitlines()[0]
                 self.refresh_listbox()
             else:
-                full_path = self.current_directory + "/"+ selection
+                if(self.current_directory != "/"):
+                    full_path = self.current_directory + "/"+ selection
+                else:
+                    full_path = self.current_directory + selection
                 if full_path.startswith("/"):
                     self.current_directory = full_path
                     self.location_label.config(text=full_path)
